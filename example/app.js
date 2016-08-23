@@ -2,27 +2,37 @@ import koa from 'koa';
 import parser from 'koa-bodyparser';
 import mongoose from 'mongoose';
 import graffiti from '@risingstack/graffiti';
+import faker from 'faker';
 import { getSchema } from '../src';
 
-import User from './user';
+import Country from './country';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/graphql');
-const port = process.env.PORT || 8080;
+
+const countries = Array(10).fill(null).map(() => ({
+  code: faker.address.countryCode(),
+  name: faker.address.country(),
+  dictionary: [],
+  language: [],
+  loc: {
+    type: 'lat-long',
+    coordinates: [faker.address.latitude(), faker.address.longitude()]
+  }
+}));
+Country.remove().then(() => Country.create(countries));
+
+const port = process.env.PORT || 8000;
 
 const hooks = {
-  viewer: {
-    pre: (next, root, args, request) => {
-      console.log(request);
-      next();
-    },
+  plural: {
     post: (next, value) => {
-      console.log(value);
+      console.log(JSON.stringify(value));
       next();
     }
   }
 };
-const schema = getSchema([User], { hooks });
+const schema = getSchema([Country], { hooks });
 
 // set up example server
 const app = koa();
