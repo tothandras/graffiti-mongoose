@@ -50,7 +50,7 @@
     "eslint": "3.3.1",
     "eslint-config-airbnb-base": "5.0.2",
     "eslint-plugin-import": "1.13.0",
-    "graphql": "0.6.2",
+    "graphql": "0.7.0",
     "mocha": "3.0.2",
     "mongoose": "4.5.9",
     "objectid": "3.2.1",
